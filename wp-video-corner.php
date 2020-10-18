@@ -3,9 +3,9 @@
 Plugin Name: Video Corner
 Description: Dodaje shortcode [wideo autoplay=1 mute=1]url-youtube[/wideo] z opcją minimalizacji wideo do lewego dolnego rogu podczas przewijania strony.
 Author: Sebastian Bort
-Version: 1.0.0
+Version: 1.0.1
 */
-class Video_Corner {
+class WP_Video_Corner {
 
         private $assets_included = false;
 
@@ -25,36 +25,37 @@ class Video_Corner {
                   <script>
                   jQuery(function($) { 
                       
-                      var $window = $(window);
-                      var $videoWrap = $('.video-wrap');
-                      var $video = $('.video');
-                      var $videoHeight = $video.outerHeight();
-                      var $videoClosed = false;
-                      var $positionFix = 300;
+                      var window = $(window);
+                      var videoWrap = $('.video-wrap');
+                      var videoCloseBtn = $('.video-wrap .close-video');
+                      var video = $('.video-content');
+                      var videoHeight = video.outerHeight();
+                      var videoClosed = false;
+                      var positionFix = 300;
                       
-                      $window.on('scroll',  function() {
+                      window.on('scroll',  function() {
                       
-                          if($videoClosed) {
+                          if(videoClosed) {
                                 return false;
                           }
                         
-                          var windowScrollTop = $window.scrollTop();
-                          var videoBottom = $videoHeight + $videoWrap.offset().top - $positionFix;
+                          var windowScrollTop = window.scrollTop();
+                          var videoBottom = videoHeight + videoWrap.offset().top - positionFix;
                         
                           if(windowScrollTop > videoBottom) {
-                              $videoWrap.height($videoHeight);
-                              $video.addClass('stuck');
+                              videoWrap.height(videoHeight);
+                              video.addClass('stuck');
                           } 
                           else {
-                              $videoWrap.height('auto');
-                              $video.removeClass('stuck');
+                              videoWrap.height('auto');
+                              video.removeClass('stuck');
                           } 
                         
                       });
                       
-                      $('.close-video').click(function(){
-                              $video.removeClass('stuck');
-                              $videoClosed = true;
+                      videoCloseBtn.click(function(){
+                              video.removeClass('stuck');
+                              videoClosed = true;
                       });                       
                   });
                   </script>
@@ -87,12 +88,12 @@ class Video_Corner {
                   	margin: 30px 0;
                   }
                   
-                  .video iframe {
+                  .video-wrap .video-content iframe {
                   	max-width: 100%;
                   	max-height: 100%;
                   }
                   
-                  .video.stuck {
+                  .video-wrap .video-content.stuck {
                   	position: fixed;
                   	bottom: 20px;
                   	left: 20px;
@@ -107,11 +108,11 @@ class Video_Corner {
                   	box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.1);
                   }
                   
-                  .video.stuck .close-video {
+                  .video-wrap .video-content.stuck .close-video {
                   	display: flex;
                   }
                   
-                  .close-video {
+                  .video-wrap .close-video {
                   	position: absolute;
                   	height: 20px;
                   	width: 20px;
@@ -131,7 +132,7 @@ class Video_Corner {
                   	display: none;
                   }
                   
-                  .close-video:hover {
+                  .video-wrap .close-video:hover {
                   	background-color: #212121;
                   }
                   </style>            
@@ -158,8 +159,8 @@ class Video_Corner {
           
                 $body = '
                     <div class="video-wrap">
-                      <div class="video">
-                      <div class="close-video">x</div> 
+                      <div class="video-content">
+                        <div class="close-video">x</div> 
                         <iframe allowFullScreen="allowFullScreen" src="https://www.youtube.com/embed/%s?ecver=1&amp;autoplay=%d&amp;mute=%d&amp;iv_load_policy=3&amp;rel=0&amp;showinfo=0&amp;yt:stretch=16:9&amp;autohide=1&amp;color=red&amp;width=560&amp;width=560" width="560" height="315" allowtransparency="true" frameborder="0"></iframe>
                       </div>
                     </div>';
@@ -170,6 +171,6 @@ class Video_Corner {
 
 }
 
-new Video_Corner();
+new WP_Video_Corner();
 
 ?>
